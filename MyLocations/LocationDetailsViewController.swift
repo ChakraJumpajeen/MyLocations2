@@ -29,12 +29,33 @@ class LocationDetailsViewController: UITableViewController {
     var placemark: CLPlacemark?
     var categoryName = "No Category"
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        descriptionTextView.text = ""
+        categoryLabel.text = categoryName
+        latitudeLabel.text = String(format: "%.8f",coordinate.latitude)
+        longitudeLabel.text = String(format: "%.8f",coordinate.longitude)
+        
+        if let placemark = placemark {
+            addressLabel.text = string(from: placemark)
+        } else {
+            addressLabel.text = "No Address Found"
+        }
+        dateLabel.text = format(date: Date())
+        
+        // Hide keyboard
+        let gestureRecognizer = UITapGestureRecognizer(target: self,action: #selector(hideKeyboard))
+        gestureRecognizer.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(gestureRecognizer)
+    }
+    
     // MARK: - Actions
   @IBAction func done() {
-    
     guard let mainView = navigationController?.parent?.view else { return }
-    let hudView = HudView.hud(inView: view, animated: true)
+    let hudView = HudView.hud(inView: mainView, animated: true)
     hudView.text = "Tagged"
+    
     afterDelay(0.6) {
         hudView.hide()
         self.navigationController?.popViewController(animated: true)
@@ -51,28 +72,9 @@ class LocationDetailsViewController: UITableViewController {
         categoryLabel.text = categoryName
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        descriptionTextView.text = ""
-        categoryLabel.text = categoryName
-        latitudeLabel.text = String(format: "%.8f",coordinate.latitude)
-        longitudeLabel.text = String(format: "%.8f",coordinate.longitude)
-        if let placemark = placemark {
-            addressLabel.text = string(from: placemark)
-        } else {
-            addressLabel.text = "No Address Found"
-        }
-        dateLabel.text = format(date: Date())
-        
-        // Hide keyboard
-        let gestureRecognizer = UITapGestureRecognizer(target: self,action: #selector(hideKeyboard))
-        gestureRecognizer.cancelsTouchesInView = false
-        tableView.addGestureRecognizer(gestureRecognizer)
-    }
-    
     
     // MARK: - Table View Delegates
-    override func tableView(_ tableView: UITableView,willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+    override func tableView(_ tableView: UITableView,willSelectRowAt indexPath: IndexPath) -> IndexPath?{
         if indexPath.section == 0 || indexPath.section == 1 {
             return indexPath
         } else {
@@ -125,8 +127,7 @@ class LocationDetailsViewController: UITableViewController {
     @objc func hideKeyboard(_ gestureRecognizer: UIGestureRecognizer){
         let point = gestureRecognizer.location(in: tableView)
         let indexPath = tableView.indexPathForRow(at: point)
-        if indexPath != nil && indexPath!.section == 0 &&
-        indexPath!.row == 0 {
+        if indexPath != nil && indexPath!.section == 0 && indexPath!.row == 0 {
             return
         }
         descriptionTextView.resignFirstResponder()
