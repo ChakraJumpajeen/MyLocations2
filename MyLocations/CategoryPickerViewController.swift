@@ -9,22 +9,23 @@ import Foundation
 import UIKit
 
 class CategoryPickerViewController: UITableViewController {
-  var selectedCategoryName = ""
-  let categories = [
-    "No Category",
-    "Apple Store",
-    "Bar",
-    "Bookstore",
-    "Club",
-    "Grocery Store",
-    "Historic Building",
-    "House",
-    "Icecream Vendor",
-    "Landmark",
-    "Park"
-  ]
+    var selectedCategoryName = ""
+    let categories = [
+        "No Category",
+        "Apple Store",
+        "Bar",
+        "Bookstore",
+        "Club",
+        "Grocery Store",
+        "Historic Building",
+        "House",
+        "Icecream Vendor",
+        "Landmark",
+        "Park"
+    ]
   
     var selectedIndexPath = IndexPath()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         for i in 0..<categories.count {
@@ -40,11 +41,10 @@ class CategoryPickerViewController: UITableViewController {
         return categories.count
     }
     override func tableView(_ tableView: UITableView,cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(
-          withIdentifier: "Cell",
-          for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell",for: indexPath)
         let categoryName = categories[indexPath.row]
         cell.textLabel!.text = categoryName
+        
         if categoryName == selectedCategoryName
         {
             cell.accessoryType = .checkmark
